@@ -1,8 +1,8 @@
 import { neon } from '@neondatabase/serverless';
 
-export const NEON_AUTH_URL = 'https://ep-calm-forest-ax2nihyb.neonauth.c-4.us-east-2.aws.neon.tech/neondb/auth';
+export const NEON_AUTH_URL = import.meta.env.VITE_NEON_AUTH_URL || 'https://ep-calm-forest-ax2nihyb.neonauth.c-4.us-east-2.aws.neon.tech/neondb/auth';
 
-const DATABASE_URL = 'postgresql://neondb_owner:npg_IegXuOw49nqG@ep-calm-forest-ax2nihyb-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require';
+const DATABASE_URL = import.meta.env.VITE_DATABASE_URL || 'postgresql://neondb_owner:npg_IegXuOw49nqG@ep-calm-forest-ax2nihyb-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require';
 
 export const sql = neon(DATABASE_URL);
 
