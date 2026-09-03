@@ -72,7 +72,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadDashboardData();
-  }, [user]);
+  }, [user, activeTab]);
 
   // Handle click on patient in Card 3 -> redirect to patient profile
   const handleOpenPatientProfile = (patientId) => {

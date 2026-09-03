@@ -229,6 +229,14 @@ export default function PatientForm({ onCancel, onSaveSuccess }) {
 
     setLoading(true);
     try {
+      if (user?.id) {
+        await ensureNutricionistaExists(
+          user.id,
+          user.name || user.nome || user.email?.split('@')[0] || 'Nutricionista',
+          user.email || 'nutri@nutricris.com'
+        );
+      }
+
       const result = await sql`
         INSERT INTO pacientes (
           nutricionista_id, nome, data_nascimento, sexo, telefone, whatsapp, email,
