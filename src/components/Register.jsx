@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 import { User, Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
 
-export default function Register({ onSwitchToLogin }) {
+export default function Register({ onSwitchToLogin, onForgotPassword }) {
   const { signUp } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -27,8 +27,8 @@ export default function Register({ onSwitchToLogin }) {
       return;
     }
 
-    if (password.length < 9) {
-      setError('A senha deve ter no mínimo 9 caracteres.');
+    if (password.length < 6) {
+      setError('A senha deve ter no mínimo 6 caracteres.');
       return;
     }
 
@@ -108,7 +108,7 @@ export default function Register({ onSwitchToLogin }) {
           <div className="input-group">
             <label className="input-label" htmlFor="password">
               <span>Senha</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Min. 9 caracteres</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Min. 6 caracteres</span>
             </label>
             <div className="input-wrapper">
               <input
@@ -118,7 +118,7 @@ export default function Register({ onSwitchToLogin }) {
                 placeholder="•••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                minLength={9}
+                minLength={6}
                 required
               />
               <Lock className="input-icon" />
@@ -144,7 +144,7 @@ export default function Register({ onSwitchToLogin }) {
                 placeholder="•••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                minLength={9}
+                minLength={6}
                 required
               />
               <Lock className="input-icon" />
@@ -163,11 +163,20 @@ export default function Register({ onSwitchToLogin }) {
           </button>
         </form>
 
-        <div className="auth-footer">
-          <span>Já tem conta?</span>
-          <button type="button" className="auth-link" onClick={onSwitchToLogin}>
-            Faça login
-          </button>
+        <div className="auth-footer" style={{ flexDirection: 'column', gap: '8px', marginTop: '20px' }}>
+          <div>
+            <span>Já tem conta?</span>{' '}
+            <button type="button" className="auth-link" onClick={onSwitchToLogin}>
+              Faça login
+            </button>
+          </div>
+          {onForgotPassword && (
+            <div>
+              <button type="button" className="auth-link" onClick={onForgotPassword} style={{ fontSize: '0.85rem' }}>
+                Esqueci minha senha
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

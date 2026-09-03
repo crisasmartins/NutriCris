@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
 
-export default function Login({ onSwitchToRegister }) {
+export default function Login({ onSwitchToRegister, onForgotPassword }) {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,8 +25,8 @@ export default function Login({ onSwitchToRegister }) {
       return;
     }
 
-    if (password.length < 9) {
-      setError('A senha deve ter no mínimo 9 caracteres.');
+    if (password.length < 6) {
+      setError('A senha deve ter no mínimo 6 caracteres.');
       return;
     }
 
@@ -83,10 +83,21 @@ export default function Login({ onSwitchToRegister }) {
           </div>
 
           <div className="input-group">
-            <label className="input-label" htmlFor="password">
-              <span>Senha</span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Min. 9 caracteres</span>
-            </label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+              <label className="input-label" htmlFor="password" style={{ marginBottom: 0 }}>
+                Senha
+              </label>
+              {onForgotPassword && (
+                <button
+                  type="button"
+                  className="auth-link"
+                  onClick={onForgotPassword}
+                  style={{ fontSize: '0.8rem', fontWeight: '500' }}
+                >
+                  Esqueci minha senha
+                </button>
+              )}
+            </div>
             <div className="input-wrapper">
               <input
                 id="password"
@@ -95,7 +106,7 @@ export default function Login({ onSwitchToRegister }) {
                 placeholder="•••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                minLength={9}
+                minLength={6}
                 required
               />
               <Lock className="input-icon" />

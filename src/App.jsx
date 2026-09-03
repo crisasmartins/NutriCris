@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useAuth } from './context/AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
 import Dashboard from './components/Dashboard';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 
 export default function App() {
   const { user, loading } = useAuth();
-  const [view, setView] = useState('login'); // 'login' | 'register'
+  const [view, setView] = useState('login'); // 'login' | 'register' | 'forgot_password'
 
   if (loading) {
     return (
@@ -17,14 +19,27 @@ export default function App() {
     );
   }
 
-  // Se já estiver logada e tentar acessar a tela de login/cadastro, redirecionar direto para o dashboard
-  if (user) {
-    return <Dashboard />;
-  }
-
-  if (view === 'register') {
-    return <Register onSwitchToLogin={() => setView('login')} />;
-  }
-
-  return <Login onSwitchToRegister={() => setView('register')} />;
+  return (
+    <>
+      <PWAInstallPrompt />
+      {user ? (
+        <Dashboard />
+      ) : view === 'register' ? (
+        <Register 
+          onSwitchToLogin={() => setView('login')} 
+          onForgotPassword={() => setView('forgot_password')} 
+        />
+      ) : view === 'forgot_password' ? (
+        <ForgotPassword 
+          onBackToLogin={() => setView('login')} 
+        />
+      ) : (
+        <Login 
+          onSwitchToRegister={() => setView('register')} 
+          onForgotPassword={() => setView('forgot_password')} 
+        />
+      )}
+    </>
+  );
 }
+

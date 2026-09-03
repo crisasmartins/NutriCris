@@ -56,7 +56,7 @@ Crie as seguintes tabelas com todos os campos abaixo:
 - conteudo (jsonb, not null)
 - created_at (timestamp, gerado automaticamente)
 
-Após criar todas as tabelas e relacionamentos, ative o Row Level Security (RLS) em todas as tabelas para garantir que cada nutricionista acesse apenas os seus próprios dados. Configure as policies necessárias para isso.
+Após criar todas as tabelas e relacionamentos, ative o Row Level Security (RLS) em todas as tabelas para garantir que cada nutricionista acesse apenas os seus próprios dados. Configure as politicas necessárias para isso.
 
 Por fim, confirme que tudo foi criado corretamente listando as tabelas e seus campos.
 

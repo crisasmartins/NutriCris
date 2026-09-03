@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { neonSignIn, neonSignUp, neonGetSession } from '../lib/neon';
+import { neonSignIn, neonSignUp, neonGetSession, ensureNutricionistaExists } from '../lib/neon';
 
 const AuthContext = createContext();
 
@@ -22,12 +22,29 @@ export function AuthProvider({ children }) {
 
       if (storedToken && storedUser) {
         try {
+          const localUser = JSON.parse(storedUser);
+
+          // Immediately sync the user to the DB to prevent FK violations
+          if (localUser?.id && localUser?.email) {
+            await ensureNutricionistaExists(
+              localUser.id,
+              localUser.name || localUser.nome || localUser.email.split('@')[0],
+              localUser.email
+            );
+          }
+
           const session = await neonGetSession(storedToken);
           if (session && session.user) {
             setUser(session.user);
             localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(session.user));
-          } else {
-            // Keep local user if active session, else refresh
+            // Sync session user too
+            if (session.user.id && session.user.email) {
+              await ensureNutricionistaExists(
+                session.user.id,
+                session.user.name || session.user.nome || session.user.email.split('@')[0],
+                session.user.email
+              );
+            }
           }
         } catch (e) {
           console.error('Session validation error:', e);
@@ -47,6 +64,14 @@ export function AuthProvider({ children }) {
       if (result.token) {
         setToken(result.token);
         localStorage.setItem(STORAGE_KEY_TOKEN, result.token);
+      }
+      // Ensure nutritionist exists in DB
+      if (result.user.id && result.user.email) {
+        await ensureNutricionistaExists(
+          result.user.id,
+          result.user.name || result.user.nome || result.user.email.split('@')[0],
+          result.user.email
+        );
       }
     }
     return result;
