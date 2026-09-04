@@ -26,11 +26,10 @@ export default function Dashboard() {
     try {
       await ensureDatabaseSchema();
 
-      // Card 1: Total de pacientes ativos da nutricionista logada
+      // Card 1: Total de pacientes ativos no banco de dados
       const totalRes = await sql`
         SELECT COUNT(*)::int AS total
-        FROM pacientes
-        WHERE nutricionista_id = ${user.id};
+        FROM pacientes;
       `;
       setTotalPacientes(totalRes[0]?.total || 0);
 
@@ -39,14 +38,12 @@ export default function Dashboard() {
         SELECT COUNT(c.*)::int AS total
         FROM consultas c
         JOIN pacientes p ON c.paciente_id = p.id
-        WHERE p.nutricionista_id = ${user.id}
-          AND c.data_consulta >= date_trunc('week', CURRENT_DATE)::date
+        WHERE c.data_consulta >= date_trunc('week', CURRENT_DATE)::date
           AND c.data_consulta <= (date_trunc('week', CURRENT_DATE) + INTERVAL '6 days')::date;
       `;
       setConsultasSemana(consultasRes[0]?.total || 0);
 
       // Card 3: Pacientes sem retorno
-      // Última consulta há mais de 30 dias (ou nenhuma consulta) E sem próximo retorno agendado (ou retorno já vencido)
       const semRetornoRes = await sql`
         SELECT 
           p.id,
@@ -55,7 +52,6 @@ export default function Dashboard() {
           MAX(c.proximo_retorno) AS proximo_retorno
         FROM pacientes p
         LEFT JOIN consultas c ON p.id = c.paciente_id
-        WHERE p.nutricionista_id = ${user.id}
         GROUP BY p.id, p.nome
         HAVING 
           (MAX(c.data_consulta) IS NULL OR MAX(c.data_consulta) < CURRENT_DATE - INTERVAL '30 days')

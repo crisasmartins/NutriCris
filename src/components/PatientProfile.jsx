@@ -101,7 +101,7 @@ export default function PatientProfile({ patientId, onBack }) {
     setLoading(true);
     try {
       const [patRes, conRes, plaRes] = await Promise.all([
-        sql`SELECT * FROM pacientes WHERE id = ${patientId} AND nutricionista_id = ${user.id}`,
+        sql`SELECT * FROM pacientes WHERE id = ${patientId}`,
         sql`SELECT * FROM consultas WHERE paciente_id = ${patientId} ORDER BY data_consulta DESC`,
         sql`SELECT * FROM planos_alimentares WHERE paciente_id = ${patientId} ORDER BY created_at DESC`
       ]);

@@ -29,7 +29,6 @@ export default function Patients({ selectedPatientId, onSelectPatient }) {
           MAX(c.proximo_retorno) AS proximo_retorno
         FROM pacientes p
         LEFT JOIN consultas c ON p.id = c.paciente_id
-        WHERE p.nutricionista_id = ${user.id}
         GROUP BY p.id
         ORDER BY p.created_at DESC;
       `;
